@@ -75,8 +75,14 @@ function BookList({ selectedBook, setSelectedBook }) {
 						))}
 					</Row>
 				</Col>
-				<Col md={4} id="comment-area" className="my-auto p-2">
-					{selectedBook ? <CommentArea book={selectedBook} /> : <div>Select a book to show comments.</div>}
+				<Col md={4} className="my-auto p-2">
+					{selectedBook ? (
+						<CommentArea id="comment-area" book={selectedBook} />
+					) : (
+						<div className="text-danger">
+							<strong>Select a book to show comments.</strong>
+						</div>
+					)}
 				</Col>
 			</Row>
 		</Container>

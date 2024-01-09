@@ -61,7 +61,7 @@ button.brown:hover {
 }
 
 .commentArea {
-	max-height: 75dvh;
+	max-height: 75vh;
 	overflow-y: auto;
 }
 
@@ -74,7 +74,7 @@ footer a:hover {
 }
 
 .my-scroll-zone {
-	max-height: 80dvh;
+	max-height: 80vh;
 	overflow-y: auto;
 	scrollbar-width: thin;
 	scrollbar-color: transparent transparent;

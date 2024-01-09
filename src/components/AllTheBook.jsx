@@ -32,7 +32,7 @@ function AllBooks({ onBookSelect }) {
 	};
 
 	return (
-		<Container className="my-scroll-zone my-4 rounded">
+		<Container className="my-scroll-zone my-2 rounded">
 			<div className="section-toggles">
 				<button className="btn my-btn mx-3 mt-4 mb-2" onClick={() => toggleSection("fantasy")}>
 					Fantasy
