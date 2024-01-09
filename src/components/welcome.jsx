@@ -9,7 +9,7 @@ function AlertClose() {
 		<>
 			<Alert show={show} variant="success" className="mt-2">
 				<Alert.Heading>Welcome in our shop</Alert.Heading>
-				<p>Buy more books for more points and rewords!</p>
+				<p>Buy more books for more points and rewards!</p>
 				<hr />
 				<div className="d-flex justify-content-end">
 					<Button onClick={() => setShow(false)} variant="outline-success">

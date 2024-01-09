@@ -1,33 +1,25 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, ListGroup } from "react-bootstrap";
 import AddComment from "./AddComment";
 import Loading from "./Loading";
 import Error from "./Error";
-
 export const API_URL = "https://striveschool-api.herokuapp.com/api/comments/";
 export const AUTH_TOKEN =
 	"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxYzJjMjBkOGEyMDAwMThhNDhhMmQiLCJpYXQiOjE3MDQ3MjA0ODQsImV4cCI6MTcwNTkzMDA4NH0.Vvao4K4ecGDgp8dk7wmXHHxGN9tXVrYOBz6hJqopsfc";
 
-class CommentArea extends Component {
-	state = {
-		comments: [],
-		isLoading: false,
-		error: null,
-	};
+function CommentArea({ book }) {
+	const [comments, setComments] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
 
-	componentDidUpdate(prevProps) {
-		if (prevProps.book && this.props.book && prevProps.book.asin !== this.props.book.asin) {
-			this.fetchComments();
-		}
-	}
-
-	fetchComments = async () => {
-		if (!this.props.book) {
+	const fetchComments = async () => {
+		if (!book) {
 			return;
 		}
-		this.setState({ isLoading: true, error: null });
+		setIsLoading(true);
+		setError(null);
 		try {
-			const response = await fetch(`${API_URL}${this.props.book.asin}`, {
+			const response = await fetch(`${API_URL}${book.asin}`, {
 				headers: {
 					Authorization: AUTH_TOKEN,
 				},
@@ -35,26 +27,25 @@ class CommentArea extends Component {
 			if (!response.ok) {
 				throw new Error("Failed to fetch comments");
 			}
-			const comments = await response.json();
-			this.setState({ comments });
+			const data = await response.json();
+			setComments(data);
 		} catch (error) {
-			this.setState({ error: error.message });
+			setError(error.message);
 		} finally {
-			this.setState({ isLoading: false });
+			setIsLoading(false);
 		}
 	};
 
-	handleCommentAdded = () => {
-		this.fetchComments();
+	useEffect(() => {
+		fetchComments();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [book]);
+
+	const handleCommentAdded = () => {
+		fetchComments();
 	};
 
-	componentDidMount() {
-		if (this.props.book) {
-			this.fetchComments();
-		}
-	}
-
-	deleteComment = async (commentId) => {
+	const deleteComment = async (commentId) => {
 		try {
 			const response = await fetch(`${API_URL}/${commentId}`, {
 				method: "DELETE",
@@ -67,28 +58,22 @@ class CommentArea extends Component {
 				throw new Error("Failed to delete comment");
 			}
 
-			this.fetchComments();
+			fetchComments();
 		} catch (error) {
 			console.error("Error deleting comment:", error);
 		}
 	};
-	render() {
-		const { comments, isLoading, error } = this.state;
-		const { book } = this.props;
-		if (isLoading) {
-			return <Loading />;
-		}
-		if (error) {
-			return <Error message={error} />;
-		}
-		return (
-			<Col className="commentArea">
-				<h5 className="fw-bold text-center my-2">Comments: {book ? book.title : "Select a book"}</h5>
-				<CommentsList comments={comments} onDelete={this.deleteComment} className="comment-section" />
-				<AddComment book={this.props.book} onCommentAdded={this.fetchComments} />
-			</Col>
-		);
-	}
+
+	if (isLoading) return <Loading />;
+	if (error) return <Error message={error} />;
+
+	return (
+		<Col className="commentArea">
+			<h5 className="fw-bold text-center my-2">Comments: {book ? book.title : "Select a book"}</h5>
+			<CommentsList comments={comments} onDelete={deleteComment} className="comment-section" />
+			{book && <AddComment book={book} onCommentAdded={handleCommentAdded} />}
+		</Col>
+	);
 }
 
 const CommentsList = ({ comments, onDelete }) => (
@@ -96,7 +81,7 @@ const CommentsList = ({ comments, onDelete }) => (
 		{comments.map((comment) => (
 			<ListGroup.Item
 				className="d-flex flex-column align-items-center justify-content-center rounded gap-2"
-				key={comment.id}
+				key={comment._id}
 			>
 				<div className="fw-bold text-center">{comment.comment}</div>
 				<div className="fw-bold text-center">

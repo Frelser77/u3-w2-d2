@@ -1,10 +1,9 @@
 import React from "react";
-
 import booksFantasyData from "../data/fantasy.json";
 import ButtonCard from "./buttonCard.jsx";
 import { Card, Col, Container, Row } from "react-bootstrap";
 
-function BooksFantasy() {
+function BooksFantasy({ onShowInfo }) {
 	const category = booksFantasyData[0].category;
 	return (
 		<Container id="Fantasy">
@@ -27,7 +26,12 @@ function BooksFantasy() {
 								<Card.Text className="card-price">
 									Prezzo: <span className="badge bg-success">€{book.price}</span>
 								</Card.Text>
-								<ButtonCard />
+								<ButtonCard
+									onAddToCart={() => {
+										/* logica per aggiungere al carrello */
+									}}
+									onShowInfo={() => onShowInfo(book)}
+								/>
 							</Card.Body>
 						</Card>
 					</Col>

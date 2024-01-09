@@ -2,7 +2,8 @@ import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import booksScifiData from "../data/scifi.json";
 import ButtonCard from "./buttonCard.jsx";
-function BooksScifi() {
+
+function BooksScifi({ onShowInfo }) {
 	const category = booksScifiData[0].category;
 
 	return (
@@ -26,7 +27,12 @@ function BooksScifi() {
 								<Card.Text className="card-price">
 									Prezzo: <span className="badge bg-success">€{book.price}</span>
 								</Card.Text>
-								<ButtonCard />
+								<ButtonCard
+									onAddToCart={() => {
+										/* logica per aggiungere al carrello */
+									}}
+									onShowInfo={() => onShowInfo(book)}
+								/>
 							</Card.Body>
 						</Card>
 					</Col>
